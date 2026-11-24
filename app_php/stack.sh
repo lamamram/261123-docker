@@ -20,17 +20,19 @@ docker run \
        --restart unless-stopped -d \
        --net app-php \
        -p 8080:80 \
+       -v ./vhost.conf:/etc/nginx/conf.d/vhost.conf:ro \
        nginx:trixie-perl
 
-docker cp vhost.conf app-php-nginx:/etc/nginx/conf.d/
+# docker cp vhost.conf app-php-nginx:/etc/nginx/conf.d/
 # reload le serveur
-docker restart app-php-nginx
+# docker restart app-php-nginx
 
 docker run \
        --name app-php-fpm \
        --net app-php \
        --restart unless-stopped -d \
+       -v ./index.php:/srv/index.php:ro \
        php:8.6.0-fpm-trixie
 
-docker cp ./index.php app-php-fpm:/srv
+# docker cp ./index.php app-php-fpm:/srv
 # test du cp: docker exec app-php-fpm ls /srv/index.php

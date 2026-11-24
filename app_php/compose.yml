@@ -35,11 +35,17 @@ services:
       - app-php
     volumes:
       - ./index.php:/srv/index.php:ro
+      - ./docker-php-entrypoint.sh:/usr/local/bin/docker-php-entrypoint.sh:ro
+    entrypoint: ["docker-php-entrypoint.sh"]
+    command: ["php-fpm"]
     depends_on:
       - db # on crée le service fpm quand le service db est prêt
     profiles:
       - run
-  
+    # post_start:
+    #   - command: docker-php-ext-install pdo_mysql
+
+
   ## docker compose exec fpm docker-php-ext-install pdo_mysql
   ## docker compose restart fpm
 

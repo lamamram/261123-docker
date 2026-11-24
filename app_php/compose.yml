@@ -1,0 +1,43 @@
+networks:
+  app-php:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
+          gateway: 172.18.0.1
+
+volumes:
+  data:
+
+## service = définition type de conteneurs qui seront potentiellement répliqués dans l'infra
+services:
+  db:
+    image: mariadb:10.11.19-jammy
+    restart: unless-stopped
+    networks:
+      - app-php
+    env_file:
+      - .env
+    volumes:
+      - ./mariadb-init.sql:/docker-entrypoint-initdb.d/mariadb-init.sql:ro
+      - data:/var/lib/mysql
+  
+  fpm:
+    image: php:8.6.0-fpm-trixie
+    restart: unless-stopped
+    networks:
+      - app-php
+    volumes:
+      - ./index.php:/srv/index.php:ro
+  
+  web:
+    image: nginx:trixie-perl
+    restart: unless-stopped
+    networks:
+      - app-php
+    volumes:
+      - ./vhost.conf:/etc/nginx/conf.d/vhost.conf:ro
+    ports:
+      - 8080:80
+
+    

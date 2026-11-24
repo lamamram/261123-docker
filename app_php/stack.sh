@@ -32,6 +32,8 @@ docker run \
        --net app-php \
        --restart unless-stopped -d \
        -v ./index.php:/srv/index.php:ro \
+       -v ./pdo_mysql.so:/usr/local/lib/php/extensions/no-debug-non-zts-20230831/pdo_mysql.so \
+       -v ./pdo.ini:/usr/local/etc/php/conf.d/pdo.ini \
        php:8.6.0-fpm-trixie
 
 # docker cp ./index.php app-php-fpm:/srv

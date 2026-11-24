@@ -36,3 +36,21 @@ docker run \
 
 # docker cp ./index.php app-php-fpm:/srv
 # test du cp: docker exec app-php-fpm ls /srv/index.php
+
+docker run \
+       --name app-php-mariadb \
+       --restart unless-stopped -d \
+       --net app-php \
+       --env-file .env \
+       -v ./mariadb-init.sql:/docker-entrypoint-initdb.d/mariadb-init.sql:ro \
+       mariadb:10.11.19-jammy
+
+# --env MARIADB_USER=test \
+# --env MARIADB_PASSWORD=roottoor \
+# --env MARIADB_DATABASE=test \
+# --env MARIADB_ROOT_PASSWORD=roottoor \
+
+## REMARQUE Générale
+# ------------------------------------------------> entrypoint de l'image
+# ------------------------------------------------------------------------> cmd de l'image OU la commande substituée dans le docker run
+# lancer un conteneur exécute la commande générique: /path/to/entrypoint.sh cmd subcmd params ....

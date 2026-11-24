@@ -49,6 +49,7 @@ docker run \
        --net app-php \
        --env-file .env \
        -v ./mariadb-init.sql:/docker-entrypoint-initdb.d/mariadb-init.sql:ro \
+       -v data:/var/lib/mysql \
        mariadb:10.11.19-jammy
 
 # --env MARIADB_USER=test \

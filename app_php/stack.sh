@@ -32,10 +32,14 @@ docker run \
        --net app-php \
        --restart unless-stopped -d \
        -v ./index.php:/srv/index.php:ro \
-       -v ./pdo_mysql.so:/usr/local/lib/php/extensions/no-debug-non-zts-20230831/pdo_mysql.so \
-       -v ./pdo.ini:/usr/local/etc/php/conf.d/pdo.ini \
        php:8.6.0-fpm-trixie
 
+## depuis 8.4+: on doit utiliser l'utilitaire interne pour configurer les extensions php
+docker exec app-php-fpm docker-php-ext-install pdo_mysql
+docker restart app-php-fpm
+
+#  -v ./pdo_mysql.so:/usr/local/lib/php/extensions/no-debug-non-zts-20230831/pdo_mysql.so \
+#  -v ./pdo.ini:/usr/local/etc/php/conf.d/pdo.ini \
 # docker cp ./index.php app-php-fpm:/srv
 # test du cp: docker exec app-php-fpm ls /srv/index.php
 

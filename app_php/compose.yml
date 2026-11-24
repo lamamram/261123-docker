@@ -1,5 +1,6 @@
 networks:
   app-php:
+    name: app-php # fixe le nom du réseau
     driver: bridge
     ipam:
       config:
@@ -8,10 +9,12 @@ networks:
 
 volumes:
   data:
+    name: data # fixe le nom du volume nommé
 
 ## service = définition type de conteneurs qui seront potentiellement répliqués dans l'infra
 services:
   db:
+    container_name: app-php-mariadb # fixe le nom statique du service
     image: mariadb:10.11.19-jammy
     restart: unless-stopped
     networks:
@@ -21,16 +24,27 @@ services:
     volumes:
       - ./mariadb-init.sql:/docker-entrypoint-initdb.d/mariadb-init.sql:ro
       - data:/var/lib/mysql
+    profiles:
+      - run
   
   fpm:
+    container_name: app-php-fpm
     image: php:8.6.0-fpm-trixie
     restart: unless-stopped
     networks:
       - app-php
     volumes:
       - ./index.php:/srv/index.php:ro
+    depends_on:
+      - db # on crée le service fpm quand le service db est prêt
+    profiles:
+      - run
   
+  ## docker compose exec fpm docker-php-ext-install pdo_mysql
+  ## docker compose restart fpm
+
   web:
+    container_name: app-php-nginx
     image: nginx:trixie-perl
     restart: unless-stopped
     networks:
@@ -39,5 +53,21 @@ services:
       - ./vhost.conf:/etc/nginx/conf.d/vhost.conf:ro
     ports:
       - 8080:80
+    depends_on:
+      - fpm
+    profiles:
+      - run
+  
 
-    
+  backup:
+    image: alpine:3.24.4
+    volumes:
+      - data:/data:ro # /data dans le conteneur alpine est créé à la volée !!!
+      - ./dump:/dump # tout est créé à la volée
+    command: tar -cvzf /dump/backup.tar.gz /data
+    profiles:
+      - task
+
+# avec des profiles: docker compose --profile <xxxx> up|down ...
+# 
+

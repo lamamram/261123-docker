@@ -7,3 +7,8 @@ docker run \
        --restart unless-stopped -d \
        -p 8080:80 \
        nginx:trixie-perl
+
+docker run \
+       --name app-php-fpm \
+       --restart unless-stopped -d \
+       php:8.6.0-fpm-trixie

@@ -40,9 +40,14 @@ RUN chown -R tomcat:tomcat /opt/tomcat
 USER tomcat
 
 ## persister le dossier home pour accéder ou sauvegarder les apps
+## crée des volumes "anonymes" exploitables avec volumes_from dans un conteneur sidecar
+## exemple: docker run -it --rm --volumes-from app-java-tomcat alpine:3.24.4
+VOLUME [ "/opt/tomcat/webapps" ]
 
 ## pour communiquer avec httpd avec le port par défaut de tomcat  ???
+EXPOSE 8080
 
 ## exécuter de manière dynamique (avec substitution) le binaire en foreground catalina.sh vs startup.sh ???
 ## et ajouter la sous commande pour lancer en one shot run ou start ???
+CMD [ "/opt/tomcat/bin/catalina.sh", "run" ]
 

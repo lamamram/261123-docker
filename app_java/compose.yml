@@ -1,0 +1,35 @@
+networks:
+  app-java:
+    name: app-java
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+          gateway: 172.20.0.1
+
+services:
+  httpd:
+    container_name: app-java-httpd
+    image: app-java-httpd:0.1
+    restart: unless-stopped
+    networks:
+      - app-java
+    ports:
+      - 8081:80
+    depends_on: # configuration avec healthcheck
+      tomcat:
+        condition: service_healthy
+  
+  tomcat:
+    container_name: app-java-tomcat
+    restart: unless-stopped
+    image: app-java-tomcat:0.1
+    networks:
+      - app-java
+    ## on peut également écrire le healthchecl ICI
+    # healthcheck:
+    #   test: grep "Server startup" /opt/tomcat/logs/catalina.*.log
+    #   interval: 3s
+    #   timeout: 5s
+    #   retries: 3
+    #   start_period: 3s

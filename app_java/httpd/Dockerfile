@@ -11,6 +11,8 @@ COPY ./httpd.conf /usr/local/apache2/conf
 # créer un dossier /usr/local/apache2/conf/sites
 RUN mkdir /usr/local/apache2/conf/sites
 
+COPY ./java_app.conf /usr/local/apache2/conf/sites
+
 # exposition: rien d'autre qu'une information utilasable par les utilisateurs de cette image
 # si on veut un apache qui écoute 443 il faut l'expliquer dans la conf apache !!!
 EXPOSE 80 443

@@ -8,6 +8,8 @@ LABEL created="2026-11-25"
 LABEL app="app-java"
 LABEL stack.tiers="tomcat"
 
+ARG TOMCAT_VERSION_MAJOR=9
+ARG TOMCAT_VERSION_FULL
 
 ## installer java (apt-get)
 ## et nettoyer le dépôt apt-get après
@@ -21,7 +23,7 @@ LABEL stack.tiers="tomcat"
 RUN apt-get update && apt-get install -y openjdk-17-jre-headless curl && \
     rm -rf /var/lib/apt/cache/lists/* && \
     mkdir /opt/tomcat && \
-    curl https://downloads.apache.org/tomcat/tomcat-9/v9.0.124/bin/apache-tomcat-9.0.124.tar.gz | \
+    curl https://downloads.apache.org/tomcat/tomcat-${TOMCAT_VERSION_MAJOR}/v${TOMCAT_VERSION_FULL}/bin/apache-tomcat-${TOMCAT_VERSION_FULL}.tar.gz | \
     tar -xzv -C /opt/tomcat --strip-components=1
 
 ## ajouter un utilisateur tomcat avec le dossier /opt/tomcat comme home et le groupe propriétaire
@@ -38,6 +40,9 @@ RUN chown -R tomcat:tomcat /opt/tomcat
 
 ## changer l'utilisateur à tomcat
 USER tomcat
+
+# j'ajoute une ou plusieurs variables d'environnement utilisables dans le conteneur (docker run)
+ENV USER=tomcat
 
 ## persister le dossier home pour accéder ou sauvegarder les apps
 ## crée des volumes "anonymes" exploitables avec volumes_from dans un conteneur sidecar

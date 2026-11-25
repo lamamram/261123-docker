@@ -24,17 +24,20 @@ RUN apt-get update && apt-get install -y openjdk-17-jre-headless curl && \
     curl https://downloads.apache.org/tomcat/tomcat-9/v9.0.124/bin/apache-tomcat-9.0.124.tar.gz | \
     tar -xzv -C /opt/tomcat --strip-components=1
 
-
 ## ajouter un utilisateur tomcat avec le dossier /opt/tomcat comme home et le groupe propriétaire
+RUN useradd -M -d /opt/tomcat -U tomcat
+
+## déterminer le dossier home du conteneur : pwd: /opt/tomcat/webapps
+WORKDIR /opt/tomcat/webapps
 
 ## télécharger l'application sample https://tomcat.apache.org/tomcat-10.1-doc/appdev/sample/sample.war dans le dossier home 
+ADD https://tomcat.apache.org/tomcat-10.1-doc/appdev/sample/sample.war .
 
 ## spécifier le propriétaire et groupe à tomcat pour le dossier /opt/tomcat 
-
-
-## déterminer le dossier home du conteneur: /opt/tomcat/webapps
+RUN chown -R tomcat:tomcat /opt/tomcat
 
 ## changer l'utilisateur à tomcat
+USER tomcat
 
 ## persister le dossier home pour accéder ou sauvegarder les apps
 

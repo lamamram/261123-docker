@@ -1,3 +1,8 @@
+## COMMANDES D'USAGE
+# lancer/arrêter la stack: docker compose --profile run up -d | docker compose --profile run down
+# avec un service one-shot: docker compose run --rm backup
+# avec un volumes_from: docker compose --profile volumes-from up -d; docker compose down
+
 networks:
   app-php:
     name: app-php # fixe le nom du réseau
@@ -82,9 +87,6 @@ services:
     command: tar -cvzf /dump/backup.tar.gz /data
     profiles:
       - task
-
-# avec des profiles: docker compose --profile <xxxx> up|down ...
-# avec un service one-shot: docker compose run --rm backup
 
 
 ## version à chaud: avec la clé volumes_from

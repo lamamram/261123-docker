@@ -8,7 +8,7 @@
 ## et nettoyer le dépôt apt-get après
 
 ## ajouter un dossier /opt/tomcat
-## injecter le fichier https://downloads.apache.org/tomcat/tomcat-9/v9.0.98/bin/apache-tomcat-9.0.98.tar.gz dans ce dossier
+## injecter le fichier https://downloads.apache.org/tomcat/tomcat-9/v9.0.124/bin/apache-tomcat-9.0.124.tar.gz dans ce dossier
 ## décomprésser dans ce dossier sans dossier intermédiaire 
 ## et supprimer l'archive
 

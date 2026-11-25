@@ -4,6 +4,7 @@
 # 1/ docker login https://<domain> -u <user> --password-stdin
 # 2/ renommer l'image avec docker tag docker tag app-java-httpd:0.1 localhost/app-java-httpd:0.1
 # 3/ docker push localhost/app-java-httpd:0.1
+# 3bis/ builder avec le bon nom et pousser : docker build -t localhost/app-java-httpd:0.1 . --push
 
 services:
   registry:

@@ -26,6 +26,7 @@ services:
       - data:/var/lib/mysql
     profiles:
       - run
+      - volumes-from
   
   fpm:
     container_name: app-php-fpm
@@ -36,13 +37,18 @@ services:
     volumes:
       - ./index.php:/srv/index.php:ro
       - ./docker-php-entrypoint.sh:/usr/local/bin/docker-php-entrypoint.sh:ro
+    # redéfinir l'entrypoint du conteneur PHP-FPM pour le customiser
+    # ne pas oublier de rendre le script exécutable avec chmod +x docker-php-entrypoint.sh
+    # ne pas oublier de réexpliciter la command: ["php-fpm"]
     entrypoint: ["docker-php-entrypoint.sh"]
     command: ["php-fpm"]
     depends_on:
       - db # on crée le service fpm quand le service db est prêt
     profiles:
       - run
-    # post_start:
+
+    # TENTATIVE D'UTILISATION DES HOOKS: mais on ne peut pas redémarrer le conteneur de façon détaché ici !
+    # post_start: pre_start, pre_stop et post_stop sont des hooks disponibles pour le conteneur
     #   - command: docker-php-ext-install pdo_mysql
 
 
@@ -64,6 +70,9 @@ services:
     profiles:
       - run
   
+############### tâches d'administration #############################
+
+## version à froid: on utilise le volume data même si le service db est down
 
   backup:
     image: alpine:3.24.4
@@ -75,5 +84,24 @@ services:
       - task
 
 # avec des profiles: docker compose --profile <xxxx> up|down ...
-# 
+# avec un service one-shot: docker compose run --rm backup
 
+
+## version à chaud: avec la clé volumes_from
+
+  backup-hot:
+    image: alpine:3.24.4
+    volumes_from:
+      # permet d'injecter tous les volumes liés au service db dans le conteneur courant
+      - db # ICI DB DOIT ETRE UP !!!        
+    volumes:
+      - ./dump:/dump
+    # ----------------------------------------> emplacement du volume data lié au service db
+    command: tar -cvzf /dump/backup-hot.tar.gz /var/lib/mysql
+    profiles:
+      - volumes-from
+    depends_on:
+      - db
+
+  ## le volumes_from permet d'utilser les volumes nommés "anonymes"
+  ## définis dans le Dockerfile de l'image avec l'instruction VOLUMES

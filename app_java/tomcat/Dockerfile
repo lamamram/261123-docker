@@ -8,6 +8,7 @@ LABEL created="2026-11-25"
 LABEL app="app-java"
 LABEL stack.tiers="tomcat"
 
+# PARAM=dflt valeur par défaut qui sera écrasée par docker build --build-arg=10 ou dans le docker compose
 ARG TOMCAT_VERSION_MAJOR=9
 ARG TOMCAT_VERSION_FULL
 

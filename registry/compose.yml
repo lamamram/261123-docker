@@ -1,5 +1,10 @@
 ---
 
+## USAGE: 
+# 1/ docker login https://<domain> -u <user> --password-stdin
+# 2/ renommer l'image avec docker tag docker tag app-java-httpd:0.1 localhost/app-java-httpd:0.1
+# 3/ docker push localhost/app-java-httpd:0.1
+
 services:
   registry:
     image: registry:2
@@ -41,3 +46,4 @@ networks:
       config:
         - subnet: 172.21.0.0/24
           gateway: 172.21.0.1
+

@@ -15,7 +15,8 @@ networks:
 services:
   httpd:
     container_name: app-java-httpd
-    image: app-java-httpd:0.1
+    # image: app-java-httpd:0.1
+    image: localhost/app-java-httpd:0.1
     build:
       context: ./httpd
       # dockerfile: Dockerfile

@@ -106,4 +106,4 @@ services:
       - db
 
   ## le volumes_from permet d'utilser les volumes nommés "anonymes"
-  ## définis dans le Dockerfile de l'image avec l'instruction VOLUMES
+  ## définis dans le Dockerfile de l'image avec l'instruction VOLUME
